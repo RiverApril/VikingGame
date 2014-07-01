@@ -1,0 +1,14 @@
+C:\Users\Nedearb\Documents\Files\Cs\VikingGame\VikingGameServer\obj\Debug\VikingGameServer.csprojResolveAssemblyReference.cache
+C:\Users\Nedearb\Documents\Files\Cs\VikingGame\VikingGameServer\obj\Debug\VikingGameServer.FormServerMain.resources
+C:\Users\Nedearb\Documents\Files\Cs\VikingGame\VikingGameServer\obj\Debug\VikingGameServer.Properties.Resources.resources
+C:\Users\Nedearb\Documents\Files\Cs\VikingGame\VikingGameServer\obj\Debug\VikingGameServer.csproj.GenerateResource.Cache
+C:\Users\Nedearb\Documents\Files\Cs\VikingGame\VikingGameServer\bin\Debug\VikingGameServer.exe.config
+C:\Users\Nedearb\Documents\Files\Cs\VikingGame\VikingGameServer\bin\Debug\VikingGameServer.exe
+C:\Users\Nedearb\Documents\Files\Cs\VikingGame\VikingGameServer\bin\Debug\VikingGameServer.pdb
+C:\Users\Nedearb\Documents\Files\Cs\VikingGame\VikingGameServer\obj\Debug\VikingGameServer.exe
+C:\Users\Nedearb\Documents\Files\Cs\VikingGame\VikingGameServer\obj\Debug\VikingGameServer.pdb
+C:\Users\Nedearb\Documents\Files\Cs\VikingGame\VikingGameServer\bin\Debug\VikingGame.exe
+C:\Users\Nedearb\Documents\Files\Cs\VikingGame\VikingGameServer\bin\Debug\OpenTK.dll
+C:\Users\Nedearb\Documents\Files\Cs\VikingGame\VikingGameServer\bin\Debug\VikingGame.pdb
+C:\Users\Nedearb\Documents\Files\Cs\VikingGame\VikingGameServer\bin\Debug\OpenTK.pdb
+C:\Users\Nedearb\Documents\Files\Cs\VikingGame\VikingGameServer\bin\Debug\OpenTK.xml
