@@ -3,21 +3,31 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace VikingGame {
-    public abstract class Entity : Renderable{
+    public abstract class Entity : Renderable {
+
+        public static Random rand = new Random();
 
 
+        public int entityId { get; set; }
+
+
+        public float X { get { return position.X; } set { position.X = value; } }
+        public float Z { get { return position.Z; } set { position.Z = value; } }
 
         public Vector3 position = new Vector3(0, 0, 0);
         public Vector3 halfSize = new Vector3(.5f, .5f, .5f);
 
-        protected Game game;
+        public Entity() : this(0) {
 
-        public Entity(Game game) {
-            this.game = game;
+        }
+
+        public Entity(int entityId) {
+            this.entityId = entityId;
             init();
         }
 
@@ -29,7 +39,11 @@ namespace VikingGame {
             FrameManager.noTexture.render(game);
         }
 
-        public abstract void update(Game game, World world);
+        public virtual void clientUpdate(Game game, WorldInterface world) {
+
+        }
+
+        public abstract void update(WorldInterface world);
 
         public bool aabbXZ(Vector3 dif, Vector3 pb, Vector3 rb) {
             return 
@@ -42,7 +56,7 @@ namespace VikingGame {
         }
 
         //Returns true if it hits a wall
-        protected bool move(World world, Vector2 dif) {
+        public bool move(WorldInterface world, Vector2 dif) {
             bool cx = false;
             bool cz = false;
 
@@ -78,8 +92,37 @@ namespace VikingGame {
             return cx || cz;
         }
 
-        public virtual void addRenderable(ref List<Object3<Vector3, Renderable, int>> renderList) {
+        public virtual void addRenderable(ref List<Object3<Vector3, Renderable, int>> renderList, Camera camera) {
             renderList.Add(new Object3<Vector3, Renderable, int>(position, this, 0));
+        }
+
+        public void setPosition(float x, float z) {
+            position.X = x;
+            position.Z = z;
+        }
+
+        public void moveViaPacket(WorldInterface world, PacketPlayerInput pep) {
+            move(world, pep.move);
+        }
+
+        public virtual void readMajor(NetworkStream stream) {
+            entityId = StreamData.readInt(stream);
+            readMinor(stream);
+        }
+
+        public virtual void writeMajor(NetworkStream stream) {
+            StreamData.writeInt(stream, entityId);
+            writeMinor(stream);
+        }
+
+        public virtual void readMinor(NetworkStream stream) {
+            position.X = StreamData.readFloat(stream);
+            position.Z = StreamData.readFloat(stream);
+        }
+
+        public virtual void writeMinor(NetworkStream stream) {
+            StreamData.writeFloat(stream, position.X);
+            StreamData.writeFloat(stream, position.Z);
         }
     }
 }

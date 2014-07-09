@@ -52,8 +52,8 @@ namespace VikingGame {
 
         uint i = 0;
 
-        private int indicesCount;
-        private int verticesCount;
+        public int indicesCount;
+        public int verticesCount;
 
         private bool useColor;
         private bool useTexture;
@@ -75,6 +75,25 @@ namespace VikingGame {
         private uint vboNormals;
 
         private uint pId;
+
+        public static int[] charSizes = new int[]{
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,//@ABCDEFGHIJKLMNO
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,//PQRSTUVWXYZ[\]^_
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 5, 8, 8, 6, 8, 8, 8,// abcdefghijklmno
+        8, 8, 8, 8, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,//pqrstuvwxyz
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8
+    };
 
         public RenderGroup(Game game) {
             pId = (uint)game.glProgram;
@@ -103,6 +122,7 @@ namespace VikingGame {
             GL.DeleteBuffers(1, ref vboVertices);
             GL.DeleteBuffers(1, ref vboColors);
             GL.DeleteBuffers(1, ref vboTextureCoords);
+            GL.DeleteBuffers(1, ref vboNormals);
             GL.DeleteBuffers(1, ref ibo);
             GL.DeleteVertexArrays(1, ref vao);
         }
@@ -115,35 +135,37 @@ namespace VikingGame {
             addCube(a, b, sides.HasFlag(Sides.front), sides.HasFlag(Sides.back), sides.HasFlag(Sides.left), sides.HasFlag(Sides.right), sides.HasFlag(Sides.top), sides.HasFlag(Sides.bottom), colors, textureCoords);
         }
 
-        internal void addGuiText(Vector2 position, string text, Vector4 color, int size = 8) {
+        internal void addGuiText(Vector2 position, string text, Vector4 color, int size = 1) {
             int p = 0;
             foreach(char c in text){
                 addGuiChar(position + new Vector2(p, 0), c, color, size);
-                p += charSize(c);
+                p += charSize(c) * size;
             }
         }
 
-        internal void addGuiChar(Vector2 position, char character, Vector4 color, int size = 8) {
-            addGuiRectangle(position, new Vector2(size, size), color, getCharTextureCoords(character));
+        internal void addGuiChar(Vector2 position, char character, Vector4 color, int size = 1) {
+            addGuiRectangle(position, new Vector2(size * charSizes[character], size * 8), color, getCharTextureCoords(character), 2);
         }
 
         private Vector2[] getCharTextureCoords(char character) {
-            float one64 = 1 / 64f;
-            float x = ((character % 16) * (one64));
-            float y = ((character / 16) * (one64)) + ((1 / 4f) * 3);
-            return new Vector2[] { new Vector2(x, y), new Vector2(x+one64, y), new Vector2(x+(1/charSizes[character]),
-                 y+one64), new Vector2(x, y+one64) };
+            float x = ((character % 16) * (MathCustom.one64));
+            float y = ((character / 16) * (MathCustom.one64)) + ((1f / 4f) * 3f);
+            return new Vector2[] { 
+                new Vector2(x, y), 
+                new Vector2(x + MathCustom.one64, y), 
+                new Vector2(x + (MathCustom.one512 * charSizes[character]), y + MathCustom.one64), 
+                new Vector2(x, y + MathCustom.one64) };
         }
 
-        internal void addGuiRectangle(Rectangle bounds, Vector4 color, Vector2[] textureCoords = null) {
-            addGuiRectangle((int)bounds.X, (int)bounds.Y, (int)(bounds.X + bounds.Width), (int)(bounds.Y + bounds.Height), color, textureCoords);
+        internal void addGuiRectangle(Rectangle bounds, Vector4 color, Vector2[] textureCoords = null, float z = 1) {
+            addGuiRectangle((int)bounds.X, (int)bounds.Y, (int)(bounds.X + bounds.Width), (int)(bounds.Y + bounds.Height), color, textureCoords, z);
         }
 
-        internal void addGuiRectangle(Vector2 position, Vector2 size, Vector4 color, Vector2[] textureCoords = null) {
-            addGuiRectangle((int)position.X, (int)position.Y, (int)(position.X + size.X), (int)(position.Y + size.Y), color, textureCoords);
+        internal void addGuiRectangle(Vector2 position, Vector2 size, Vector4 color, Vector2[] textureCoords = null, float z = 1) {
+            addGuiRectangle((int)position.X, (int)position.Y, (int)(position.X + size.X), (int)(position.Y + size.Y), color, textureCoords, z);
         }
 
-        internal void addGuiRectangle(int x1, int y1, int x2, int y2, Vector4 color, Vector2[] textureCoords) {
+        internal void addGuiRectangle(int x1, int y1, int x2, int y2, Vector4 color, Vector2[] textureCoords, float z = 1) {
 
             if(textureCoords == null){
                 textureCoords = noTextureCoords;
@@ -158,10 +180,10 @@ namespace VikingGame {
             vertexList.Add(new Vector3(position.X - size.X, position.Y, -1));// 7
             */
 
-            vertexList.Add(new Vector3(-x2, -y2, -1));// 4
-            vertexList.Add(new Vector3(-x1, -y2, -1));// 5
-            vertexList.Add(new Vector3(-x1, -y1, -1));// 6
-            vertexList.Add(new Vector3(-x2, -y1, -1));// 7
+            vertexList.Add(new Vector3(-x2, -y2, -z - 80));// 4
+            vertexList.Add(new Vector3(-x1, -y2, -z - 80));// 5
+            vertexList.Add(new Vector3(-x1, -y1, -z - 80));// 6
+            vertexList.Add(new Vector3(-x2, -y1, -z - 80));// 7
 
             indexList.Add(1 + (i * 4));
             indexList.Add(0 + (i * 4));
@@ -461,22 +483,22 @@ namespace VikingGame {
             }
 
             vertices = vertexList.ToArray<Vector3>();
-            Console.WriteLine(vertices.Length + " vertices");
+            //Console.WriteLine(vertices.Length + " vertices");
 
             normals = normalList.ToArray<Vector3>();
-            Console.WriteLine(normals.Length + " normals");
+            //Console.WriteLine(normals.Length + " normals");
 
             if (useColor) {
                 colors = colorList.ToArray<Vector4>();
-                Console.WriteLine(colors.Length + " colors");
+                //Console.WriteLine(colors.Length + " colors");
             }
             if (useTexture) {
                 textureCoords = textureCoordList.ToArray<Vector2>();
-                Console.WriteLine(textureCoords.Length + " texture coords");
+                //Console.WriteLine(textureCoords.Length + " texture coords");
             }
 
             indices = indexList.ToArray<uint>();
-            Console.WriteLine(indices.Length + " indices");
+            //Console.WriteLine(indices.Length + " indices");
 
             indicesCount = indices.Length;
             verticesCount = vertices.Length;
@@ -588,25 +610,6 @@ namespace VikingGame {
                 new Vector2((x+1) * textureSplit, (y+1) * textureSplit), 
                 new Vector2((x+0) * textureSplit, (y+1) * textureSplit) };
         }
-
-        public static int[] charSizes = new int[]{
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 8, 8, 8,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8
-    };
         
 
         internal int stringSize(string text) {

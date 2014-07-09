@@ -17,6 +17,9 @@ namespace VikingGame {
         public static float r5 = MathHelper.DegreesToRadians(5);
         public static float r1 = MathHelper.DegreesToRadians(1);
 
+        public static float one64 = 1f/64f;
+        public static float one512 = 1f / 512f;
+
         public static float sin45Times100 = (float)(Math.Sin(MathCustom.r45) * 100);
 
         public static Vector3 vect3PointFive = new Vector3(.5f, .5f, .5f);

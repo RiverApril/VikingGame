@@ -13,7 +13,8 @@ namespace VikingGame {
 
         private Vector2 moveTarget = new Vector2();
 
-        public EntityMonster(Game game, Vector3 p) : base(game){
+        public EntityMonster() : this(Vector3.Zero, 0) { }
+        public EntityMonster(Vector3 p, int entityId) : base(entityId){
             position = p;
         }
 
@@ -21,10 +22,10 @@ namespace VikingGame {
             halfSize = new Vector3(.2f, .2f, .2f);
         }
 
-        public override void update(Game game, World world) {
+        public override void update(WorldInterface world) {
 
-            if (game.rand.Next() % 30 == 0) {
-                double r = game.rand.NextDouble() * MathCustom.r360;
+            if (rand.Next() % 30 == 0) {
+                double r = rand.NextDouble() * MathCustom.r360;
                 moveTarget = new Vector2((float)Math.Sin(r), (float)Math.Cos(r));
             }
 

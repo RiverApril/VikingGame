@@ -8,21 +8,21 @@ namespace VikingGame {
     public class ShaderSources {
 
         public static string vertexShader = @"
-#version 130
+#version 120
 
-precision highp float;
-
-in vec3 in_Position;
-in vec4 in_Color;
-in vec2 in_TextureCoord;
-in vec3 in_Normal;
+//precision highp float;
 
 uniform mat4 modelMatrix;
 uniform mat4 perspectiveMatrix;
 
-out vec4 pass_Color;
-out vec2 pass_TextureCoord;
-out vec3 pass_Normal;
+attribute vec3 in_Position;
+attribute vec4 in_Color;
+attribute vec2 in_TextureCoord;
+attribute vec3 in_Normal;
+
+varying vec4 pass_Color;
+varying vec2 pass_TextureCoord;
+varying vec3 pass_Normal;
 
 void main(void) {
     gl_Position = perspectiveMatrix * modelMatrix * vec4(in_Position, 1.0);
@@ -33,18 +33,20 @@ void main(void) {
 }
 ";
         public static string fragmentShader = @"
-#version 130
+#version 120
 
-precision highp float;
+//precision highp float;
 
 uniform sampler2D texture_diffuse;
 
-in vec4 pass_Color;
-in vec2 pass_TextureCoord;
-in vec3 pass_Normal;
+varying vec4 pass_Color;
+varying vec2 pass_TextureCoord;
+varying vec3 pass_Normal;
+
+//out vec4 gl_FragColor;
 
 void main(void) {
-    gl_FragColor =  (texture(texture_diffuse, pass_TextureCoord) * pass_Color);
+    gl_FragColor =  (texture2D(texture_diffuse, pass_TextureCoord) * pass_Color);
 }
 ";
 

@@ -33,21 +33,21 @@ namespace VikingGame {
         public Vector2[] texCoordsTop;
         public Vector2[] texCoordsFlat;
 
-        public int index;
+        public byte index;
 
         private RenderGroup renderGroup = null;
 
-        public Wall(int index, WallFlag flags, int sidesX, int sidesY, int topX, int topY, int flatX, int flatY)
+        public Wall(byte index, WallFlag flags, int sidesX, int sidesY, int topX, int topY, int flatX, int flatY)
             : this(index, flags, RenderGroup.makeTextureCoords(sidesX, sidesY), RenderGroup.makeTextureCoords(topX, topY), RenderGroup.makeTextureCoords(flatX, flatY)) {
 
         }
 
-        public Wall(int index, WallFlag flags)
+        public Wall(byte index, WallFlag flags)
             : this(index, flags, MathCustom.toArray(Vector2.Zero), MathCustom.toArray(Vector2.Zero), MathCustom.toArray(Vector2.Zero)) {
             
         }
 
-        public Wall(int index, WallFlag flags, Vector2[] sides, Vector2[] top, Vector2[] flat) {
+        public Wall(byte index, WallFlag flags, Vector2[] sides, Vector2[] top, Vector2[] flat) {
             walls[index] = this;
             this.index = index;
             this.flags = flags;
@@ -79,7 +79,7 @@ namespace VikingGame {
             }
         }
 
-        internal static Wall getWall(int index) {
+        public static Wall getWall(byte index) {
             return walls[index];
         }
 

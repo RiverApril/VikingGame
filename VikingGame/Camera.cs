@@ -21,7 +21,13 @@ namespace VikingGame {
 
         public float scale = 50;
 
+        private float yRotSpeed = MathCustom.r1 * 1.5f;
+
         public Camera() {
+            reset();
+        }
+
+        public void reset() {
             position = new Vector3(0, -6, -6);
             rotation = new Vector3(MathCustom.r45, MathCustom.r45, -MathCustom.r45);
         }
@@ -35,13 +41,13 @@ namespace VikingGame {
                 position.Y += moveSpeed;
             }*/
             if (game.inputControl.keyRotateLeft.down) {
-                rotation.Y -= MathCustom.r1;
+                rotation.Y -= yRotSpeed;
                 if (rotation.Y < 0) {
                     rotation.Y += MathCustom.r360;
                 }
             }
             if (game.inputControl.keyRotateRight.down) {
-                rotation.Y += MathCustom.r1;
+                rotation.Y += yRotSpeed;
                 if (rotation.Y > MathCustom.r360) {
                     rotation.Y -= MathCustom.r360;
                 }

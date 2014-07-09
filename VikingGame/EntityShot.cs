@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 
 namespace VikingGame {
@@ -11,13 +12,15 @@ namespace VikingGame {
 
         private Vector2 moveTarget = new Vector2();
 
-        private Random rand = new Random();
-
         private float angle;
 
-        private int life = 0;
+        private byte life = 0;
 
-        public EntityShot(Game game, Vector3 p, Entity owner, float angle) : base(game) {
+        public EntityShot() : base(){
+
+        }
+
+        public EntityShot(Vector3 p, Entity owner, float angle, int entityId) : base(entityId) {
             position = p;
             moveTarget.X = (float)(Math.Sin(angle));
             moveTarget.Y = (float)(Math.Cos(angle));
@@ -28,10 +31,10 @@ namespace VikingGame {
             halfSize = new Vector3(.1f, .1f, .1f);
         }
 
-        public override void update(Game game, World world) {
+        public override void update(WorldInterface world) {
             life++;
             if (move(world, moveTarget * moveSpeed)) {
-                world.entityRemoveList.Add(this);
+                world.removeEntity(entityId);
             }
 
         }
@@ -41,6 +44,30 @@ namespace VikingGame {
                 world.prepareModelMatrix(camera, position, camera.rotation.Y+angle);
                 FrameManager.shot1.render(game);
             }
+        }
+
+        public override void readMajor(NetworkStream stream) {
+            base.readMajor(stream);
+            moveTarget.X = StreamData.readFloat(stream);
+            moveTarget.Y = StreamData.readFloat(stream);
+            angle = StreamData.readFloat(stream);
+        }
+
+        public override void writeMajor(NetworkStream stream) {
+            base.writeMajor(stream);
+            StreamData.writeFloat(stream, moveTarget.X);
+            StreamData.writeFloat(stream, moveTarget.Y);
+            StreamData.writeFloat(stream, angle);
+        }
+
+        public override void readMinor(NetworkStream stream) {
+            base.readMinor(stream);
+            life = StreamData.readByte(stream);
+        }
+
+        public override void writeMinor(NetworkStream stream) {
+            base.writeMinor(stream);
+            StreamData.writeByte(stream, life);
         }
     }
 }

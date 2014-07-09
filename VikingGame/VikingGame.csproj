@@ -78,6 +78,7 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="EntityMonster.cs" />
+    <Compile Include="EntityMultiplayerPlayer.cs" />
     <Compile Include="EntityShot.cs" />
     <Compile Include="FpsControl.cs" />
     <Compile Include="FrameManager.cs" />
@@ -85,18 +86,24 @@
     <Compile Include="GuiEvent.cs" />
     <Compile Include="InputControl.cs" />
     <Compile Include="MathCustom.cs" />
+    <Compile Include="Menus.cs" />
+    <Compile Include="NoSuchPacketException.cs" />
+    <Compile Include="NotSinglePlayerException.cs" />
     <Compile Include="Object3.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Game.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rectangle.cs" />
     <Compile Include="Renderable.cs" />
     <Compile Include="RenderGroup.cs" />
+    <Compile Include="ServerConnection.cs" />
     <Compile Include="ShaderSources.cs" />
     <Compile Include="StreamData.cs" />
     <Compile Include="Vector4Color.cs" />
     <Compile Include="Wall.cs" />
     <Compile Include="World.cs" />
+    <Compile Include="WorldData.cs" />
+    <Compile Include="WorldInterface.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

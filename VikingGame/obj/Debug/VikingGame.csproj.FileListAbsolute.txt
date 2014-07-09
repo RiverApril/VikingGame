@@ -12,3 +12,16 @@ C:\Users\Nedearb\Documents\Files\Cs\VikingGame\VikingGame\bin\Debug\VikingGame.e
 C:\Users\Nedearb\Documents\Files\Cs\VikingGame\VikingGame\bin\Debug\VikingGame.application
 C:\Users\Nedearb\Documents\Files\Cs\VikingGame\VikingGame\obj\Debug\VikingGame.exe.manifest
 C:\Users\Nedearb\Documents\Files\Cs\VikingGame\VikingGame\obj\Debug\VikingGame.application
+C:\Users\Braeden\Documents\Files\Programming\CS\VikingGame\VikingGame\bin\Debug\VikingGame.exe.config
+C:\Users\Braeden\Documents\Files\Programming\CS\VikingGame\VikingGame\bin\Debug\VikingGame.exe.manifest
+C:\Users\Braeden\Documents\Files\Programming\CS\VikingGame\VikingGame\bin\Debug\VikingGame.application
+C:\Users\Braeden\Documents\Files\Programming\CS\VikingGame\VikingGame\bin\Debug\VikingGame.exe
+C:\Users\Braeden\Documents\Files\Programming\CS\VikingGame\VikingGame\bin\Debug\VikingGame.pdb
+C:\Users\Braeden\Documents\Files\Programming\CS\VikingGame\VikingGame\bin\Debug\OpenTK.dll
+C:\Users\Braeden\Documents\Files\Programming\CS\VikingGame\VikingGame\bin\Debug\OpenTK.pdb
+C:\Users\Braeden\Documents\Files\Programming\CS\VikingGame\VikingGame\bin\Debug\OpenTK.xml
+C:\Users\Braeden\Documents\Files\Programming\CS\VikingGame\VikingGame\obj\Debug\VikingGame.csprojResolveAssemblyReference.cache
+C:\Users\Braeden\Documents\Files\Programming\CS\VikingGame\VikingGame\obj\Debug\VikingGame.exe.manifest
+C:\Users\Braeden\Documents\Files\Programming\CS\VikingGame\VikingGame\obj\Debug\VikingGame.application
+C:\Users\Braeden\Documents\Files\Programming\CS\VikingGame\VikingGame\obj\Debug\VikingGame.exe
+C:\Users\Braeden\Documents\Files\Programming\CS\VikingGame\VikingGame\obj\Debug\VikingGame.pdb

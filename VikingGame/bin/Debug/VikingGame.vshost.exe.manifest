@@ -42,26 +42,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="OpenTK.dll" size="3947008">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="OpenTK.dll" size="3944960">
       <assemblyIdentity name="OpenTK" version="1.1.0.0" publicKeyToken="BAD199FE84EB3DF4" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>oeNzTMtISMlJaH6kkpMcV9RLrmYSmImLHo9yA5ir+OM=</dsig:DigestValue>
+        <dsig:DigestValue>cy5VkPT5EDiFvncMJc6JZPJivzQ3AMInnFdnsc4vnsM=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="VikingGame.exe" size="44032">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="VikingGame.exe" size="56320">
       <assemblyIdentity name="VikingGame" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>zpH05aFyGxuKmsWjQGg4hBwO36xyghMq+l5cUAIZvs4=</dsig:DigestValue>
+        <dsig:DigestValue>G7alUlkEOukOTwYJhJM+/Gy8eCqptmAZDdAYNCaxMSI=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

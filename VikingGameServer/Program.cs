@@ -13,7 +13,7 @@ namespace VikingGameServer {
         static void Main() {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            FormServerMain form = new FormServerMain();
+            Server form = new Server();
             Application.Idle += new EventHandler(form.update);
             Application.Run(form);
         }

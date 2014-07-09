@@ -16,8 +16,10 @@ namespace VikingGame {
         private float swingDistance = .5f;
         private bool swingVisable;
 
-        public Player(Game game) : base(game){
+        private string username;
 
+        public Player(string username, int entityId) : base(entityId){
+            this.username = username;
         }
 
         protected override void init() {
@@ -27,15 +29,15 @@ namespace VikingGame {
 
         }
 
-        public override void addRenderable(ref List<Object3<Vector3, Renderable, int>> renderList) {
+        public override void addRenderable(ref List<Object3<Vector3, Renderable, int>> renderList, Camera camera) {
 
             renderList.Add(new Object3<Vector3, Renderable, int>(position, this, 0));
 
             if (swingVisable) {
                 Vector3 s = new Vector3(
-                 position.X + (float)(Math.Sin(MathCustom.r180 - swingAngle - game.camera.rotation.Y) * swingDistance),
+                 position.X + (float)(Math.Sin(MathCustom.r180 - swingAngle - camera.rotation.Y) * swingDistance),
                  position.Y,
-                 position.Z + (float)(Math.Cos(MathCustom.r180 - swingAngle - game.camera.rotation.Y) * swingDistance));
+                 position.Z + (float)(Math.Cos(MathCustom.r180 - swingAngle - camera.rotation.Y) * swingDistance));
 
                 renderList.Add(new Object3<Vector3, Renderable, int>(s, this, 1));
             }
@@ -53,8 +55,11 @@ namespace VikingGame {
                 FrameManager.swing1.render(game);
             }
         }
+        public override void update(WorldInterface world) {
 
-        public override void update(Game game, World world) {
+        }
+
+        public override void clientUpdate(Game game, WorldInterface world){
 
             Vector2 dif = new Vector2();
 
@@ -75,16 +80,22 @@ namespace VikingGame {
                 dif.Y += (float)Math.Cos(-game.camera.rotation.Y + MathCustom.r90);
             }
 
+            if (dif != Vector2.Zero) {
 
-            if(dif != Vector2.Zero){
                 dif.Normalize();
+
+                if (game.isMP) {
+                    game.sendPacket(new PacketPlayerInput(dif * moveSpeed, entityId, world.worldId));
+                }
+
                 move(world, dif * moveSpeed);
             }
 
             if (game.inputControl.keyAttack.pressed) {
-                //world.entityAddList.Add(new EntityShot(game, position, this, MathCustom.r180-game.camera.rotation.Y));
-                swingAngle = -MathCustom.r45;
-                swingVisable = true;
+                //game.sendNewEntity(new EntityShot(position, this, MathCustom.r180-game.camera.rotation.Y, 0), world.worldId);
+                game.world.addNewEntity(new EntityShot(position, this, MathCustom.r180-game.camera.rotation.Y, 0));
+                //swingAngle = -MathCustom.r45;
+                //swingVisable = true;
             }
 
             if (swingVisable) {
@@ -95,7 +106,7 @@ namespace VikingGame {
             }
 
             if (Keyboard.GetState().IsKeyDown(Key.T)) {
-                world.entityAddList.Add(new EntityMonster(game, position));
+                game.world.addNewEntity(new EntityMonster(position, 0));
             }
 
             game.camera.position = -position;

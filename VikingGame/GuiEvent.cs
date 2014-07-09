@@ -10,7 +10,8 @@ namespace VikingGame {
         cancel,
         mousePressed,
         mouseReleased,
-        mouseMoved
+        mouseMoved,
+        keyTyped
     }
 
     public class GuiEvent {
@@ -23,4 +24,16 @@ namespace VikingGame {
             this.mousePosition = mousePosition;
         }
     }
+
+    /*public class GuiKeyEvent : GuiEvent{
+
+        public GuiEventType type;
+        public KeyEvent keyEvent;
+
+        public GuiKeyEvent(GuiEventType type, KeyEvent keyEvent, Vector2 mousePosition) {
+            this.type = type;
+            this.keyEvent = keyEvent;
+            this.mousePosition = mousePosition;
+        }
+    }*/
 }

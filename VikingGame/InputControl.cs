@@ -46,10 +46,12 @@ namespace VikingGame {
         public KeyBind keyRotateUp;
         public KeyBind keyRotateDown;
 
+        public KeyBind keyAttack;
+
         public KeyBind leftClick;
         public KeyBind rightClick;
 
-        public KeyBind keyAttack;
+        public KeyBind keyEscape;
 
         public Vector2 mousePosition;
         public Vector2 lastMousePosition;
@@ -73,6 +75,8 @@ namespace VikingGame {
 
             leftClick = new KeyBind(this, MouseButton.Left);
             rightClick = new KeyBind(this, MouseButton.Right);
+
+            keyEscape = new KeyBind(this, Key.Escape);
             
         }
 
@@ -92,18 +96,23 @@ namespace VikingGame {
 
 
             foreach(KeyBind keyBind in keyBindList){
-                if(keyBind.isKey){
-                    keyBind.pressed = !keyBind.down && keyboardState.IsKeyDown(keyBind.kId);
-                    keyBind.released = keyBind.down && !keyboardState.IsKeyDown(keyBind.kId);
+                keyBind.pressed = !keyBind.down && isKeyDown(keyBind, game);
+                keyBind.released = keyBind.down && !isKeyDown(keyBind, game);
 
-                    keyBind.down = keyboardState.IsKeyDown(keyBind.kId);
-                } else {
-                    keyBind.pressed = !keyBind.down && mouseState.IsButtonDown(keyBind.mbId);
-                    keyBind.released = keyBind.down && !mouseState.IsButtonDown(keyBind.mbId);
-
-                    keyBind.down = mouseState.IsButtonDown(keyBind.mbId);
-                }
+                keyBind.down = isKeyDown(keyBind, game);
             }
+        }
+
+        private bool isKeyDown(KeyBind keyBind, Game game) {
+            return game.Focused ? (keyBind.isKey ? keyboardState.IsKeyDown(keyBind.kId) : mouseState.IsButtonDown(keyBind.mbId)) : false;
+        }
+
+        internal bool hasKeyEvent(Game game) {
+            throw new NotImplementedException();
+        }
+
+        internal void takeKeyEvent() {
+            throw new NotImplementedException();
         }
     }
 }
