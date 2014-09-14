@@ -22,6 +22,8 @@ namespace VikingGame {
         public Vector3 position = new Vector3(0, 0, 0);
         public Vector3 halfSize = new Vector3(.5f, .5f, .5f);
 
+        public Vector2 speed = new Vector2(0, 0);
+
         public Entity() : this(0) {
 
         }
@@ -40,6 +42,10 @@ namespace VikingGame {
         }
 
         public virtual void clientUpdate(Game game, WorldInterface world) {
+
+        }
+
+        public virtual void clientSimUpdate(Game game, World world) {
 
         }
 
@@ -101,9 +107,9 @@ namespace VikingGame {
             position.Z = z;
         }
 
-        public void moveViaPacket(WorldInterface world, PacketPlayerInput pep) {
+        /*public void moveViaPacket(WorldInterface world, PacketPlayerInput pep) {
             move(world, pep.move);
-        }
+        }*/
 
         public virtual void readMajor(NetworkStream stream) {
             entityId = StreamData.readInt(stream);
@@ -118,11 +124,22 @@ namespace VikingGame {
         public virtual void readMinor(NetworkStream stream) {
             position.X = StreamData.readFloat(stream);
             position.Z = StreamData.readFloat(stream);
+            speed.X = StreamData.readFloat(stream);
+            speed.Y = StreamData.readFloat(stream);
         }
 
         public virtual void writeMinor(NetworkStream stream) {
             StreamData.writeFloat(stream, position.X);
             StreamData.writeFloat(stream, position.Z);
+            StreamData.writeFloat(stream, speed.X);
+            StreamData.writeFloat(stream, speed.Y);
+        }
+
+        public void setPosition(PacketPlayerInput pep) {
+            position.X = pep.pos.X;
+            position.Z = pep.pos.Y;
+            speed.X = pep.spd.X;
+            speed.Y = pep.spd.Y;
         }
     }
 }

@@ -39,5 +39,9 @@ namespace VikingGame {
         internal static Vector2 toVector2(System.Drawing.Point point) {
             return new Vector2(point.X, point.Y);
         }
+
+        internal static float bound(float a, float minA, float maxA) {
+            return a < minA ? minA : (a > maxA ? maxA : a);
+        }
     }
 }

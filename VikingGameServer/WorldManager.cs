@@ -18,6 +18,8 @@ namespace VikingGameServer {
 
         private Server server;
 
+        public ServerEntity[] entityArray;
+
         public ServerWorld(int width, int height, Server server) {
             wallGrid = new byte[width, height];
             this.width = width;
@@ -51,17 +53,24 @@ namespace VikingGameServer {
                 e.update(this);
             }
 
-            while (entityAddList.Count > 0) {
-                if (!entityList.ContainsKey(entityAddList[0].entityId)) {
-                    entityList.Add(entityAddList[0].entityId, entityAddList[0]);
-                } else {
-                    server.println("Can't add: " + entityAddList[0].entityId);
+            bool c = entityAddList.Count > 0 || entityRemoveList.Count > 0;
+
+            if (c) {
+                while (entityAddList.Count > 0) {
+                    if (!entityList.ContainsKey(entityAddList[0].entityId)) {
+                        entityList.Add(entityAddList[0].entityId, entityAddList[0]);
+                    } else {
+                        server.println("Can't add: " + entityAddList[0].entityId);
+                    }
+                    entityAddList.RemoveAt(0);
                 }
-                entityAddList.RemoveAt(0);
-            }
-            while (entityRemoveList.Count > 0) {
-                entityList.Remove(entityRemoveList[0]);
-                entityRemoveList.RemoveAt(0);
+                while (entityRemoveList.Count > 0) {
+                    entityList.Remove(entityRemoveList[0]);
+                    entityRemoveList.RemoveAt(0);
+                }
+
+                entityArray = new ServerEntity[entityList.Count];
+                entityList.Values.CopyTo(entityArray, 0);
             }
         }
 

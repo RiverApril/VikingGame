@@ -10,6 +10,7 @@ namespace VikingGame {
     public class Player : Entity {
 
         private float moveSpeed = .1f;
+        private float accSpeed = .02f;
 
         private float swingAngle = 0;
 
@@ -85,10 +86,21 @@ namespace VikingGame {
                 dif.Normalize();
 
                 if (game.isMP) {
-                    game.sendPacket(new PacketPlayerInput(dif * moveSpeed, entityId, world.worldId));
+                    game.sendPacket(new PacketPlayerInput(position.Xz, speed, entityId, world.worldId));
                 }
 
-                move(world, dif * moveSpeed);
+                speed += dif * accSpeed;
+
+            }
+
+            speed.X *= .8f;
+            speed.Y *= .8f;
+
+            speed.X = MathCustom.bound(speed.X, -moveSpeed, moveSpeed);
+            speed.Y = MathCustom.bound(speed.Y, -moveSpeed, moveSpeed);
+
+            if (speed != Vector2.Zero) {
+                move(world, speed);
             }
 
             if (game.inputControl.keyAttack.pressed) {
@@ -110,6 +122,14 @@ namespace VikingGame {
             }
 
             game.camera.position = -position;
+        }
+
+
+        public override void readMinor(System.Net.Sockets.NetworkStream stream) {
+            StreamData.readFloat(stream);
+            StreamData.readFloat(stream);
+            StreamData.readFloat(stream);
+            StreamData.readFloat(stream);
         }
 
     }

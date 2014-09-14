@@ -54,14 +54,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="VikingGame.exe" size="56320">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="VikingGame.exe" size="60416">
       <assemblyIdentity name="VikingGame" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>G7alUlkEOukOTwYJhJM+/Gy8eCqptmAZDdAYNCaxMSI=</dsig:DigestValue>
+        <dsig:DigestValue>29zIBsXPaD8hZkQCa0yH9YOggj1UeKo/Y+8xDyruhCA=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

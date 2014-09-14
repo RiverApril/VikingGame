@@ -16,6 +16,8 @@ namespace VikingGame {
 
         private byte life = 0;
 
+        private bool remove = false;
+
         public EntityShot() : base(){
 
         }
@@ -37,6 +39,18 @@ namespace VikingGame {
                 world.removeEntity(entityId);
             }
 
+        }
+
+        public override void clientSimUpdate(Game game, World world) {
+            life++;
+            if (!remove) {
+                if (move(world, moveTarget * moveSpeed)) {
+                    remove = true;
+                    if (!game.isMP) {
+                        world.removeEntity(entityId);
+                    }
+                }
+            }
         }
 
         public override void render(Game game, World world, Camera camera, Vector3 position, int meta) {

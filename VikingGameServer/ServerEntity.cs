@@ -19,6 +19,10 @@ namespace VikingGameServer {
             entity.setPosition(x, z);
         }
 
+        internal void setPosition(PacketPlayerInput pep) {
+            entity.setPosition(pep);
+        }
+
         public float X { get { return entity.X; } set { entity.X = value; } }
         public float Z { get { return entity.Z; } set { entity.Z = value; } }
 
@@ -26,8 +30,8 @@ namespace VikingGameServer {
             entity.update(w);
         }
 
-        internal void move(ServerWorld w, PacketPlayerInput pep) {
+        /*internal void move(ServerWorld w, PacketPlayerInput pep) {
             entity.moveViaPacket(w, pep);
-        }
+        }*/
     }
 }

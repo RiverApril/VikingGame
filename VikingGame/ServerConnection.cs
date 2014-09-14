@@ -93,6 +93,9 @@ namespace VikingGame {
             } else if (p.id == StreamData.packetToId[typeof(PacketUpdateEntity)]) {
                 PacketUpdateEntity pep = (PacketUpdateEntity)p;
                 pep.read(stream, game.world);
+            } else if (p.id == StreamData.packetToId[typeof(PacketClientDisconnect)]) {
+                PacketClientDisconnect pep = (PacketClientDisconnect)p;
+                Console.Write("Client Disconnected: "+pep.username);
             }
         }
 

@@ -139,27 +139,29 @@ namespace VikingGame {
 
     public class PacketPlayerInput : Packet {
 
-        public Vector2 move = new Vector2();
+        public Vector2 pos = new Vector2();
+        public Vector2 spd = new Vector2();
         public int entityId;
         public byte worldId;
 
-        public PacketPlayerInput() : this(Vector2.Zero, 0, 0) { }
-        public PacketPlayerInput(Vector2 move, int entityId, byte worldId) : base() {
-            this.move = move;
+        public PacketPlayerInput() : this(Vector2.Zero, Vector2.Zero, 0, 0) { }
+        public PacketPlayerInput(Vector2 pos, Vector2 spd, int entityId, byte worldId) : base() {
+            this.pos = pos;
+            this.spd = spd;
             this.entityId = entityId;
             this.worldId = worldId;
         }
 
         internal override void read(NetworkStream stream) {
-            move.X = StreamData.readFloat(stream);
-            move.Y = StreamData.readFloat(stream);
+            pos.X = StreamData.readFloat(stream);
+            pos.Y = StreamData.readFloat(stream);
             entityId = StreamData.readInt(stream);
             worldId = StreamData.readByte(stream);
         }
 
         internal override void write(NetworkStream stream) {
-            StreamData.writeFloat(stream, move.X);
-            StreamData.writeFloat(stream, move.Y);
+            StreamData.writeFloat(stream, pos.X);
+            StreamData.writeFloat(stream, pos.Y);
             StreamData.writeInt(stream, entityId);
             StreamData.writeByte(stream, worldId);
         }
@@ -198,19 +200,16 @@ namespace VikingGame {
     public class PacketUpdateEntity : Packet {
 
         public int entityId;
-        public byte worldId;
         public Entity entity;
 
-        public PacketUpdateEntity() : this(0, 0, null) { }
-        public PacketUpdateEntity(int entityId, byte worldId, Entity entity) {
+        public PacketUpdateEntity() : this(0, null) { }
+        public PacketUpdateEntity(int entityId, Entity entity) {
             this.entityId = entityId;
-            this.worldId = worldId;
             this.entity = entity;
         }
 
         internal override void read(NetworkStream stream) {
             entityId = StreamData.readInt(stream);
-            worldId = StreamData.readByte(stream);
         }
 
         public void read(NetworkStream stream, WorldInterface world) {
@@ -219,8 +218,22 @@ namespace VikingGame {
 
         internal override void write(NetworkStream stream) {
             StreamData.writeInt(stream, entityId);
-            StreamData.writeByte(stream, worldId);
             entity.writeMinor(stream);
+        }
+    }
+
+    public class PacketClientDisconnect : Packet {
+        public string username;
+        public PacketClientDisconnect() : this("") { }
+        public PacketClientDisconnect(String username)
+            : base() {
+            this.username = username;
+        }
+        internal override void read(NetworkStream stream) {
+            username = StreamData.readSmallString(stream);
+        }
+        internal override void write(NetworkStream stream) {
+            StreamData.writeSmallString(stream, username);
         }
     }
 
@@ -245,6 +258,7 @@ namespace VikingGame {
             newPacketType(6, typeof(PacketNewEntity));
             newPacketType(7, typeof(PacketUpdateEntity));
             newPacketType(8, typeof(PacketRemoveEntity));
+            newPacketType(9, typeof(PacketClientDisconnect));
 
 
             idToEntityType.Clear();

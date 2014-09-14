@@ -162,24 +162,14 @@ namespace VikingGameServer {
                         lastMs = stopwatch.ElapsedMilliseconds;
                         fpsControl.updateFrame(stopwatch.ElapsedMilliseconds);
                         fpsLabelText = "FPS: " + fpsControl.fps;
+                        needToUpdateLabelText = true;
 
-                        if(tick%10==0){
+                        if (tick % 60 == 0) {
                             sendPacketToAll(new PacketHello());
                         }
 
-                        PacketUpdateEntity p = new PacketUpdateEntity();
-
                         foreach(ClientConnection cc in connectedClients.Values){
-                            ServerWorld w = worldManager.worlds[cc.worldId];
-                            foreach(ServerEntity e in w.entityList.Values){
-                                p.entityId = e.entityId;
-                                p.entity = e.entity;
-                                p.worldId = cc.worldId;
-
-                                //println("Send Entity("+e.entityId+") to client: "+cc.uniqueName);
-
-                                sendPacket(cc, p);
-                            }
+                            cc.tellClient = true;
                         }
 
                         worldManager.update(this);
@@ -266,6 +256,7 @@ namespace VikingGameServer {
 
                 println("World and Player Sent to Client");
                 connectedClients.Add(clientConnection.uniqueName, clientConnection);
+                clientConnection.verified = true;
             }
 
         }

@@ -9,6 +9,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using System.Net;
 using System.Net.Sockets;
+using System.Management;
 
 namespace VikingGame {
     public class Game : GameWindow{
@@ -122,12 +123,27 @@ namespace VikingGame {
 
         private void initShaders() {
 
+            bool old = false;
+
+            Console.WriteLine();
+            Console.WriteLine("Graphics Card: "+graphicsCardInfo());
+
+            
+
+            String vertexShaderSource = old ? ShaderSources.vertexShader120 : ShaderSources.vertexShader330;
+            String fragmentShaderSource = old ? ShaderSources.fragmentShader120 : ShaderSources.fragmentShader330;
+
+            //vertexShaderSource = loadFileAsString("vertexShader.glsl", vertexShaderSource);
+
+            Console.WriteLine("Vertex Shader Version: " + shaderVersion(vertexShaderSource));
+            Console.WriteLine("Fragment Shader Version: " + shaderVersion(fragmentShaderSource));
+
             vertexShader = GL.CreateShader(ShaderType.VertexShader);
-            GL.ShaderSource(vertexShader, ShaderSources.vertexShader);
+            GL.ShaderSource(vertexShader, vertexShaderSource);
             GL.CompileShader(vertexShader);
 
             fragmentShader = GL.CreateShader(ShaderType.FragmentShader);
-            GL.ShaderSource(fragmentShader, ShaderSources.fragmentShader);
+            GL.ShaderSource(fragmentShader, fragmentShaderSource);
             GL.CompileShader(fragmentShader);
 
             glProgram = GL.CreateProgram();
@@ -138,15 +154,17 @@ namespace VikingGame {
             GL.ValidateProgram(glProgram);
             GL.UseProgram(glProgram);
 
-            
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, texturesId);
 
+            Console.WriteLine();
             Console.WriteLine("GL Error:\n"+GL.GetError()+"\n");
             Console.WriteLine("Vertex Shader Info Log:\n" + GL.GetShaderInfoLog(vertexShader)+"\n");
             Console.WriteLine("Fragment Shader Info Log:\n" + GL.GetShaderInfoLog(fragmentShader)+"\n");
             Console.WriteLine("Program Info Log:\n" + GL.GetProgramInfoLog(glProgram)+ "\n");
 
 
-            GL.ClearColor(Color4.Black);
+            GL.ClearColor(Color4.White);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.Texture2D);
 
@@ -163,9 +181,33 @@ namespace VikingGame {
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Clamp);
         }
 
+        private string graphicsCardInfo() {
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DisplayConfiguration");
+
+            string graphicsCard = string.Empty;
+            foreach (ManagementObject mo in searcher.Get()) {
+                foreach (PropertyData property in mo.Properties) {
+                    if (property.Name == "Description") {
+                        graphicsCard = property.Value.ToString();
+                    }
+                }
+            }
+            return graphicsCard;
+        }
+
+        private string shaderVersion(String shaderSource) {
+            try {
+                return (shaderSource.Substring(shaderSource.IndexOf("#version ") + 9)).Split(new char[]{'\n'}, 2)[0];
+            }catch(Exception e){
+                return "Unknown";
+            }
+        }
+
         private int loadTexture(string filename) {
             if(System.IO.File.Exists(filename)){
                 int id = GL.GenTexture();
+
+                GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2D, id);
 
                 Bitmap bmp = new Bitmap(filename);
@@ -311,6 +353,7 @@ namespace VikingGame {
 
         internal void leaveServer() {
             if (serverConnection != null) {
+                sendPacket(new PacketClientDisconnect());
                 serverConnection.remove = true;
                 serverConnection.interuptThread();
             }

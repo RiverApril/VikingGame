@@ -228,6 +228,8 @@ namespace VikingGame {
             foreach(Entity e in entityList.Values){
                 if(!game.isMP){
                     e.update(this);
+                } else {
+                    e.clientSimUpdate(game, this);
                 }
                 e.clientUpdate(game, this);
             }

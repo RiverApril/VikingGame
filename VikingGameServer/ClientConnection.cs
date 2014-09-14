@@ -11,6 +11,7 @@ namespace VikingGameServer {
     public class ClientConnection {
 
         private Thread threadListener;
+        private Thread threadTeller;
 
         private volatile TcpClient tcpClient;
 
@@ -25,6 +26,12 @@ namespace VikingGameServer {
 
         public bool remove = false;
 
+        public bool verified = false;
+
+        private PacketUpdateEntity p = new PacketUpdateEntity();
+
+        public bool tellClient = false;
+
         public ClientConnection(Server server, TcpClient tcpClient) {
             this.tcpClient = tcpClient;
             this.server = server;
@@ -33,6 +40,31 @@ namespace VikingGameServer {
 
             threadListener = new Thread(new ThreadStart(listen));
             threadListener.Start();
+
+            threadTeller = new Thread(new ThreadStart(tell));
+            threadTeller.Start();
+        }
+
+        private void tell() {
+
+            while (server.serverRunning && !remove) {
+                if (verified && tellClient) {
+
+                    ServerWorld w = server.worldManager.worlds[worldId];
+
+                    foreach (ServerEntity e in w.entityArray) {
+                        p.entityId = e.entityId;
+                        p.entity = e.entity;
+
+                        if(!remove){
+                            server.sendPacket(this, p);
+                        }
+                    }
+
+                    tellClient = false;
+
+                }
+            }
         }
 
         private void listen() {
@@ -46,13 +78,13 @@ namespace VikingGameServer {
                         serverRecived(p);
                     }
 
-                }catch(IOException){
+                } catch (System.IO.IOException) {
+                    remove = true;
                     if(uniqueName==null){
                         server.removePending(this);
                     } else {
                         server.removeClient(this, "IOExcpetion");
                     }
-                    remove = true;
                 }
             }
         }
@@ -103,7 +135,7 @@ namespace VikingGameServer {
                 if (server.worldManager.worlds.ContainsKey(pep.worldId)) {
                     ServerWorld w = server.worldManager.worlds[pep.worldId];
                     if (w.entityList.ContainsKey(pep.entityId)) {
-                        w.entityList[pep.entityId].move(w, pep);
+                        w.entityList[pep.entityId].setPosition(pep);
 
                         //server.worldManager.worlds[pep.worldId].entityList[pep.entityId].X += pep.moveX;
                         //server.worldManager.worlds[pep.worldId].entityList[pep.entityId].Z += pep.moveZ;
@@ -115,6 +147,12 @@ namespace VikingGameServer {
                 } else {
                     server.println("No such world with id: " + pep.worldId);
                 }
+            } else if (p.id == StreamData.packetToId[typeof(PacketClientDisconnect)]) {
+                PacketClientDisconnect pep = (PacketClientDisconnect)p;
+                server.removeClient(this, "Disconnect");
+                server.worldManager.worlds[worldId].removeEntity(entityId);
+                server.sendPacketToAllExcept(this, new PacketRemoveEntity(worldId, entityId));
+                remove = true;
             }
 
         }
